@@ -5,7 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggerMiddleware } from './auth/common/middleware/logger.middleware';
-
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -21,6 +23,10 @@ import { LoggerMiddleware } from './auth/common/middleware/logger.middleware';
     }),
     UserModule,
     AuthModule,
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: join(process.cwd(), 'src/schema.gql'), // Generates schema automatically
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

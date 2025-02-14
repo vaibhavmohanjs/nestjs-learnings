@@ -16,6 +16,10 @@ export class UserService {
     return this.userRepository.findOne({ where: { username } });
   }
 
+  async findOne(id: number): Promise<User | undefined> {
+    return this.userRepository.findOne({ where: { id } });
+  }
+
   async findAll(): Promise<User[] | undefined> {
     return this.userRepository.find();
   }
@@ -40,6 +44,21 @@ export class UserService {
   
   async findById(userId: number): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { id: userId } });
+  }
+
+  create(username: string, email: string, password: string): Promise<User> {
+    const newUser = this.userRepository.create({ username, email, password });
+    return this.userRepository.save(newUser);
+  }
+
+  async updateUser(id: number, username: string, email: string): Promise<User> {
+    await this.userRepository.update(id, { username, email });
+    return this.findOne(id);
+  }
+
+  async deleteUser(id: number): Promise<boolean> {
+    await this.userRepository.delete(id);
+    return true;
   }
   
 }
